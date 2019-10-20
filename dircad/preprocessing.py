@@ -107,6 +107,16 @@ y, a, b = logarithmic_cropping(y, c=48, tolerance= 20)
 x = x[:, a[0]:a[1], b[0]:b[1]]
 return x, y
 
+def normalize_data(data):
+    '''Normalize each slice in the volume'''
+    for i in range(data.shape[0]):
+        # data[i] = image_histogram_equalization(data[i])
+        std = np.std(data[i])
+        data[i] -= np.mean(data[i])
+        if std != 0:
+            data[i] /= std
+    return data
+
 def image_histogram_equalization(image, number_bins=2047):
     '''Histogram equalizer'''
     # get image histogram

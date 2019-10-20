@@ -197,6 +197,6 @@ def get_patient_case_dirc(cid, dirclab_dir ='./', resize_ratio = 1):
                     data_dcm.add_y(input_name, get_slice(full_masks_dir + input_name, resize_ratio = resize_ratio, segmentation = True))
             # X is a serie of ct scan for one patient
             X, Y = data_dcm.get_data()#
-            return numpy.array(X), numpy.array(Y)
+            return numpy.array(X), numpy.array(Y).astype('uint8')
     print(dirclab_dir + '3Dircadb1.'+str(cid)+ ' not found!')
     return None, None
