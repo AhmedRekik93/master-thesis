@@ -3,7 +3,7 @@
 This repository includes the necessary implementation to reproduce the experiments highlighted in the master thesis.
 
 ## Necessary dependencies
-* Python@2.7
+* Python@2.7 - 3.6
 * Tensorflow-gpu@1.5
 * Keras
 * numpy
