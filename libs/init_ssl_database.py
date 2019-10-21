@@ -1,7 +1,7 @@
 import h5py, json
 from libs.generators.utils import get_x_case, get_y_case
 
-def init_ssl_databse(cid = 0):
+def init_ssl_database(cid = 0):
     indices = [] 
     with h5py.File('data/training_data.h5', 'r') as hdf:
         cid = cid # 
