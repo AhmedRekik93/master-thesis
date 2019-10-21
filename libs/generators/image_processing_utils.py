@@ -7,19 +7,24 @@ def sagittal_to_transverse(vol):
     return np.moveaxis(vol, -1, 0)
     
 def add_gaussian_noise(inp, expected_noise_ratio=0.2):
-        image = inp.copy()
-        if len(image.shape) == 2:
-            row,col= image.shape
-            ch = 1
-        else:
-            row,col,ch= image.shape
-        mean = 0.
-        var = 0.1
-        sigma = var**0.5
-        gauss = np.random.normal(mean,sigma,(row,col)) * expected_noise_ratio
-        gauss = gauss.reshape(row,col, 1)
-        noisy = image + gauss
-        return noisy
+    '''Add a Gaussian noise to an image
+    @param inp Image
+    @param expected_noise_ratio Variance of the Gaussian noise
+    @return The spoiled image
+    '''
+    image = inp.copy()
+    if len(image.shape) == 2:
+        row,col= image.shape
+        ch = 1
+    else:
+        row,col,ch= image.shape
+    mean = 0.
+    var = 0.1
+    sigma = var**0.5
+    gauss = np.random.normal(mean,sigma,(row,col)) * expected_noise_ratio
+    gauss = gauss.reshape(row,col, 1)
+    noisy = image + gauss
+    return noisy
     
 def rotate90(inp, direction= 0):
     '''
@@ -37,9 +42,16 @@ def rotate90(inp, direction= 0):
     
     
 def rotate_scipy(inp, theta):
+    '''Rotate an image with an angle in [0, 360°]'''
     return rotate(inp, theta, reshape = False, cval= np.min(inp))
 
 def shift_image(X, dx=32, dy= 32):
+    '''Shift an image in the x,y axes. Uses zero interpolation
+    @param X The image
+    @param dx The shifting distance in the X-axis
+    @param dy The shifting distance in the Y-axis
+    @return shifted image 
+    '''
     m = np.min(X)
     X = np.roll(np.roll(X, dx, axis=1), dy, axis=0)
     if dy>0:
@@ -51,10 +63,3 @@ def shift_image(X, dx=32, dy= 32):
     elif dx<0:
         X[:, dx:] = m
     return X
-
-def neighborhood_labeling(stack, cl =2, label = 1):
-    '''Suppose that the stack of size 5'''
-    s = np.sum(stack[...,cl], axis=0)
-    pp = np.where(label * 3<=s, 1, 0)
-    back_forth = stack[1,..., cl] + stack[3,..., cl]
-    return np.where(back_forth == 2, 1, pp)

@@ -108,7 +108,7 @@ def crop_x_y(x,y):
     return x, y
 
 def normalize_data(data):
-    '''Normalize each slice in the volume'''
+    '''Normalize each slice in the volume to the standard distribution'''
     for i in range(data.shape[0]):
         # data[i] = image_histogram_equalization(data[i])
         std = np.std(data[i])

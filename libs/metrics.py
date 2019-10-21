@@ -12,3 +12,10 @@ def dice_coef_sig(y_true, y_pred):
     # smooth is used to avoid nan by images without 1's
     smooth = 1e-4
     return (2. * intersection + smooth) / (K.sum(y_true_f) + K.sum(y_pred_f) + smooth)
+
+
+def distance_categorical(y_true, y_pred):
+    '''Measures the distance between two classes. Used as selection criterion in validation.'''
+    t = K.argmax(y_true)
+    p = K.argmax(y_pred)
+    return K.cast(K.abs(t-p), 'float32') / 5.

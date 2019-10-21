@@ -2,6 +2,7 @@ import json, h5py, keras, random
 import numpy as np
 from utils import get_x_slice, get_y_slice
 from image_processing_utils import shift_image, rotate90, rotate_scipy
+from semi_sup_data_helper import add_new_training_data_with_separate_nan
 
 def get_training_indices():
     with open('indices/collected_training_data_indices.json', 'r') as js:
@@ -148,6 +149,10 @@ class SemiSupervisedBatchGenerator(keras.utils.Sequence):
         return len(new_slices) - counter
         
     def add_separate_samples(self, new_slices, nan_slices):
+        '''Create new database with the semi-supervised data.
+        @param new_slices The samples (axial slice, computed mask) with high confidence
+        @param nan_slices The samples with an undefined IoU
+        '''
         # Add samples having JC above 0.9 separately from slices that have NaN JS
         # new slices have the format [(case, slice, pseudo-label, score)]
         X = []
@@ -161,7 +166,7 @@ class SemiSupervisedBatchGenerator(keras.utils.Sequence):
             else:
                 existing[sample[0]] = { sample[1]: sample[2] }
         
-        # When using a vanishing database, this loop can be ignored
+        # When using a vanishing database or bucket classification, ignore this loop
         if False: 
             for i, it in enumerate(new_slices):
                 if it[0] in existing and it[1] in existing[it[0]]:
@@ -188,7 +193,7 @@ class SemiSupervisedBatchGenerator(keras.utils.Sequence):
         if X.shape[0] > 0 or len(Y_replacement) > 0:
             add_new_training_data_with_separate_nan(X, Y, X_NaN, Y_replacement)
             self.save_slices_corpus()
-            self.indices = get_collected_training_data_indices()
+            self.indices = get_training_indices()
         random.shuffle(self.indices)
         self.open_files()
         

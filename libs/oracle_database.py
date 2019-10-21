@@ -3,12 +3,18 @@ import math, random, h5py
 import numpy as np
 
 def compute_iou(y_true, y_pred):
+    '''Compute the intersection over union between two masks'''
     intersection = y_true * y_pred
     intersection = intersection.sum()
     union = y_true.sum() + y_pred.sum() - intersection
     return float(intersection) / float(union) if union != 0 else 0.
 
 def get_start_end_liver(y):
+    '''Retrieve in a volume the sub-volume interval, where the liver is featured
+    @param y The CT volume
+    @return the row of the starting slice
+    @return the row of the ending slice
+    '''
     start = 0
     end = len(y) - 1
     for i, s in enumerate(y):
@@ -28,6 +34,13 @@ def get_start_end_liver(y):
 
 
 def extract_samples(y, cid, start, end, threshold = 0.05):
+    '''Computes the training database for the oracle from one volume
+    @param y The volume
+    @param cid The volume id
+    @param start The first row of the liver sub-volume in the CT scan
+    @param start The last row of the liver sub-volume in the CT scan
+    @param threshold The interleave between the IoUs of two generated samples
+    '''
     scores = []
     for ki, i in enumerate(y):
         prev = None
@@ -48,6 +61,10 @@ def extract_samples(y, cid, start, end, threshold = 0.05):
     return scores
 
 def get_oracle_training_data(cid, threshold= 0.05):
+    '''Compute and retrieve the training data generated from a single volume
+    @param cid The volume id
+    @param threshold The interleave between the IoUs of two generated samples
+    '''
     with h5py.File('data/training_data.h5', 'r') as hdf:
         x = get_x_case(hdf, cid)
         y = np.array(get_y_case(hdf, cid))
