@@ -9,7 +9,9 @@ This repository includes the necessary implementation to reproduce the experimen
 * numpy
 * Nibabel
 * Scipy
-* medpy
+* dicom
+* h5py
+
 
 ## Datasets
 This example comprises the use of _D3-ircad_ database that includes 20 CT volumes for patients. 15 out of 20 scans feature tumors in the liver. All axial slices are represented in DICOM format. This repository contains the necessary utility to translate the downloaded database to a consumable .h5 database. 
