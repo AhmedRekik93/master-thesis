@@ -40,12 +40,14 @@ The thesis proposes a self-training method that enables semi-supervised learning
 The first step consists of training an oracle using the annotated data (1 of the 20 labeled patients). Here is the following step in the provided example:
 
 1- Execute the notebook `3- oracle-database-build.ipynb` to generate a training database for the oracle. We choose per default the CT scan `0` as the annotated data in the provided example.
+
 2- Execute the notebook `4- training-oracle.ipynb` to train an oracle. The model is initialized with a pre-trained VGG-16 model on the ImageNet task (1000 categories). 
 
 ### Training the Segmenter
 In the first iteration of the self-training, the segmenter is trained on the annotated dataset solely. The segmenter computes liver segments for unannotated data (19 remaining CT scans). Each computed segmentation is evaluated by the oracle. If the oracle assesses that a mask for a given axial slice is of high quality (class `0` or `5`), then the mask will be added in its corresponding bucket. A sampling process is carried out to select a few samples from each bucket. At each iteration, the sampling compels the increase of the database size, hence adding new data at each iteration. These steps can be executed as follows:
 
 1- Execute the notebook `5- init-ssl-database.ipynb` to initialize a separate database that contains the semi-supervised data.
+
 2- Execute the notebook `6- self-training.ipynb` to train the segmenter with the annotated data and samples new annotated data. Re-execute the notebook to iterate further with self-training method.
 
 ### Liver Segmentation
@@ -53,3 +55,7 @@ In the first iteration of the self-training, the segmenter is trained on the ann
 
 
 ![Computing segmentation on unseen data](images/segmentation-on-unseen-dataset.png)
+
+
+## Contact
+For any type of query conserning this work, please contact the author per email: `ahmedrekik93@gmail.com`.
