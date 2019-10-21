@@ -2,15 +2,8 @@ import json, h5py, keras, random
 import numpy as np
 from utils import get_x_slice, get_y_slice
 from image_processing_utils import shift_image, rotate90, rotate_scipy
-from semi_sup_data_helper import add_new_training_data_with_separate_nan
+from semi_sup_data_helper import *
 
-def get_training_indices():
-    with open('indices/collected_training_data_indices.json', 'r') as js:
-        return json.load(js)
-    
-def get_collected_semi_supervised_samples_indices():
-    with open('indices/collected_semi_supervised_samples.json', 'r') as js:
-        return json.load(js)
 
     
 class SemiSupervisedBatchGenerator(keras.utils.Sequence):
@@ -181,14 +174,17 @@ class SemiSupervisedBatchGenerator(keras.utils.Sequence):
                 self.collected_slices.append([it[0], it[1], it[3]]) # [case, slice, score]
                 X.append(get_x_slice(self.extern_hdf, it[0], it[1]))
                 Y.append(it[2]) 
-            
+                
+        for i, it in enumerate(new_slices):
+            self.collected_slices.append([it[0], it[1], it[3]]) # [case, slice, score]
+            X.append(get_x_slice(self.extern_hdf, it[0], it[1]))
+            Y.append(it[2])            
         for i, it in enumerate(nan_slices):
             X_NaN.append(get_x_slice(self.extern_hdf, it[0], it[1]))
         
         X = np.array(X, dtype= 'float32')
         Y = np.array(Y, dtype= 'uint8')
         X_NaN = np.array(X_NaN, dtype= 'float32')
-        
         self.close_files()
         if X.shape[0] > 0 or len(Y_replacement) > 0:
             add_new_training_data_with_separate_nan(X, Y, X_NaN, Y_replacement)

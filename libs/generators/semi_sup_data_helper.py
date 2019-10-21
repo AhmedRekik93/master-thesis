@@ -1,8 +1,16 @@
-import h5py
+import h5py, json
 import numpy as np
 
+def get_training_indices():
+    with open('indices/collected_training_data_indices.json', 'r') as js:
+        return json.load(js)
+    
+def get_collected_semi_supervised_samples_indices():
+    with open('indices/collected_semi_supervised_samples.json', 'r') as js:
+        return json.load(js)
+
 def add_new_training_data(X, Y, Y_replacement = []):
-    indices = get_collected_training_data_indices()
+    indices = get_training_indices()
     l = X.shape[0]
     prev = len(filter(lambda x: x[0] == 1, indices))
     for j in range(l):
@@ -57,7 +65,7 @@ def add_new_training_data(X, Y, Y_replacement = []):
 
 def add_new_training_data_with_separate_nan(X, Y, X_NaN, Y_replacement = []):
     '''This function evicts all previous slices with having class'''
-    indices = get_collected_training_data_indices()
+    indices = get_training_indices()
     l = X.shape[0]
     prev = len(filter(lambda x: x[0] == 1, indices))
     for j in range(l):

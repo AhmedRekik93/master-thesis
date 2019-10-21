@@ -42,7 +42,7 @@ def rotate90(inp, direction= 0):
     
     
 def rotate_scipy(inp, theta):
-    '''Rotate an image with an angle in [0, 360°]'''
+    '''Rotate an image with an angle in [0, 360]'''
     return rotate(inp, theta, reshape = False, cval= np.min(inp))
 
 def shift_image(X, dx=32, dy= 32):
