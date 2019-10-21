@@ -1,14 +1,14 @@
 import numpy as np
 
 def logarithmic_cropping(seg, c= 48, second = None, third = None, offset = None, previous = None, tolerance = 20):
-'''Computes the cropping cordinates that maximize the size of the liver in the mask.
-   @param seg Mask
-   @param c The size to reduce for each axis
-   @param tolerance Used to stop the recursion if the cropped liver loses less than "tolerance" liver pixels
-   @return cropped segmentation
-   @return cropping coordinates in the X axis
-   @return cropping coordinates in the Y axis
-'''
+    '''Computes the cropping cordinates that maximize the size of the liver in the mask.
+    @param seg Mask
+    @param c The size to reduce for each axis
+    @param tolerance Used to stop the recursion if the cropped liver loses less than "tolerance" liver pixels
+    @return cropped segmentation
+    @return cropping coordinates in the X axis
+    @return cropping coordinates in the Y axis
+    '''
     cropped = previous if previous is not None else seg[:,c:-c, c:-c]
     s = seg.sum()
     s_c = cropped.sum()
@@ -44,7 +44,7 @@ def logarithmic_cropping(seg, c= 48, second = None, third = None, offset = None,
             cropped_4.sum(), cropped_5.sum(), cropped_6.sum(), cropped_7.sum()]
 
     if t == 1:
-        print 'Coverage: '+ str(float(s_c)/float(s))
+        print 'Coverage ratio: '+ str(float(s_c)/float(s))
     if max(sums) < s_c:
         if t == 1:
             return previous, (a_1, a_2), (a_3, a_4)
@@ -97,15 +97,15 @@ def logarithmic_cropping(seg, c= 48, second = None, third = None, offset = None,
     raise 'Should not happen!'
 
 def crop_x_y(x,y):
-'''Reduces the image dimension length by 48 pixels
-@param x  volume
-@param y  segmentation
-@return x cropped volume
-@return y cropped segmentation
-'''
-y, a, b = logarithmic_cropping(y, c=48, tolerance= 20)
-x = x[:, a[0]:a[1], b[0]:b[1]]
-return x, y
+    '''Reduces the image dimension length by 48 pixels
+    @param x  volume
+    @param y  segmentation
+    @return x cropped volume
+    @return y cropped segmentation
+    '''
+    y, a, b = logarithmic_cropping(y, c=48, tolerance= 20)
+    x = x[:, a[0]:a[1], b[0]:b[1]]
+    return x, y
 
 def normalize_data(data):
     '''Normalize each slice in the volume'''

@@ -1,3 +1,5 @@
+import numpy as np
+
 def depth_checking(stack, cl =2, label = 1):
     '''Apply depth checking on a sub-volume of 5 axial slices. The returned inference corresponds to the axial slice in the middle (pos 2)
     @param stack The sub-volume

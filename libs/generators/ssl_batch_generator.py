@@ -3,8 +3,8 @@ import numpy as np
 from utils import get_x_slice, get_y_slice
 from image_processing_utils import shift_image, rotate90, rotate_scipy
 
-def get_semi_supervised_indices():
-    with open('indices/semi_supervised_indices.json', 'r') as js:
+def get_training_indices():
+    with open('indices/collected_training_data_indices.json', 'r') as js:
         return json.load(js)
     
 def get_collected_semi_supervised_samples_indices():
@@ -24,7 +24,7 @@ class SemiSupervisedBatchGenerator(keras.utils.Sequence):
         self.noise_offset = 0.01
         self.num_classes = num_classes
         self.size = size # Default
-        self.indices = get_semi_supervised_indices()
+        self.indices = get_training_indices()
         self.collected_slices = get_collected_semi_supervised_samples_indices()
         self.indices.sort()
         self.with_gaussian = gaussian
